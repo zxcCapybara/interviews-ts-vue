@@ -2,13 +2,15 @@
 import { ref } from 'vue'
 import type { IInterview } from '@/interfaces'
 import { v4 as uuidv4 } from 'uuid'
-import { getAuth } from 'firebase/auth'
 import { getFirestore, setDoc, doc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
 import AppLoader from '@/components/AppLoader.vue'
 import { useNotification } from '@/composables/useNotification'
 import AppNotificationError from '@/components/AppNotificationError.vue'
 import { usePhoneInput } from '@/composables/usePhoneInput'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 const { errorMessage, isNotificationOpen, openNotification } = useNotification()
 const { phone, formatPhone } = usePhoneInput()
@@ -41,11 +43,12 @@ const addNewInterview = async (): Promise<void> => {
     createdAt: new Date(),
   }
   try {
-    const userId = getAuth().currentUser?.uid
-    if (userId) {
-      await setDoc(doc(db, `users/${userId}/interviews`, payload.id), payload).then(() => {
-        router.push('/list')
-      })
+    if (userStore.userId) {
+      await setDoc(doc(db, `users/${userStore.userId}/interviews`, payload.id), payload).then(
+        () => {
+          router.push('/list')
+        },
+      )
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -97,7 +100,7 @@ const addNewInterview = async (): Promise<void> => {
         v-model="contactWhatsApp"
         class="inputInterview"
         type="text"
-        placeholder="WhatsApp телефон HR"
+        placeholder="WhatsApp HR"
       />
 
       <input
