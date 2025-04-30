@@ -1,5 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 button {
   cursor: pointer;
 }
+
+.inputInterview {
+  @apply border-1 border-gray-100 p-4 rounded-md focus:border-blue-300 focus:outline focus:outline-blue-300 w-full;
+}
+
+/* .p-inputmask.inputInterview {
+  @apply border-1 border-gray-100 p-4 rounded-md focus:border-blue-300 focus:outline focus:outline-blue-300 w-full;
+} */

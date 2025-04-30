@@ -1,5 +1,7 @@
 import './assets/main.css'
 import 'primeicons/primeicons.css'
+import InputMask from 'primevue/inputmask';
+import { FloatLabel } from 'primevue';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -26,5 +28,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(PrimeVue)
 app.use(router)
+app.component('InputMask', InputMask)
+app.component('FloatLabel', FloatLabel)
 
 app.mount('#app')

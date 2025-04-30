@@ -8,9 +8,21 @@ defineProps<Props>()
 
 <template>
   <div
-    class="box bg-[#ff798d] text-red-900 max-w-[17rem] min-h-[5rem] rounded-xl flex flex-col p-2 border-l-5 border-red-800"
+    class="box bg-[#ff798d] text-red-900 w-[24rem] min-h-[8rem] rounded-xl flex flex-col justify-center p-2 border-l-5 border-red-800 text-xl"
   >
     <span class="font-bold">Error</span>
     <span>{{ msg }}</span>
   </div>
 </template>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

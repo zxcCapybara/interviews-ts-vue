@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import AppHeader from '@/components/AppHeader.vue'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useUserStore } from '@/stores/user'
-import AppLoader from './components/AppLoader.vue';
+import AppLoader from './components/AppLoader.vue'
 
 const userStore = useUserStore()
 
@@ -19,13 +19,12 @@ onMounted(() => {
     isLoading.value = false
   })
 })
- 
 </script>
 
 <template>
-  <AppLoader v-if="isLoading"/>
+  <AppLoader v-if="isLoading" />
   <main v-else class="w-[80%] mx-auto mt-5">
-    <AppHeader/>
+    <AppHeader />
     <RouterView />
   </main>
 </template>

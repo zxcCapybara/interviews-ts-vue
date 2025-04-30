@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 
 import { computed, ref } from 'vue'
 import AppNotificationError from '@/components/AppNotificationError.vue'
+import { useNotification } from '@/composables/useNotification'
 
 const router = useRouter()
 const email = ref<string>('')
@@ -13,18 +14,7 @@ const password = ref<string>('')
 const isLogin = ref<boolean>(true)
 const isLoading = ref<boolean>(false)
 
-const errMsg = ref<string>('')
-const isNotificationOpen = ref<boolean>(false)
-
-const notificationOpen = (message: string) => {
-  errMsg.value = message
-  isNotificationOpen.value = true
-  setTimeout(() => notificationClose(), 3000)
-}
-
-const notificationClose = () => {
-  isNotificationOpen.value = false
-}
+const { isNotificationOpen, errorMessage, openNotification } = useNotification()
 
 const subtitleText = computed<string>(() => {
   return isLogin.value ? 'Аккаунта еще нет?' : 'Уже есть аккаунт?'
@@ -42,7 +32,7 @@ const toggleAuth = () => (isLogin.value = !isLogin.value)
 
 const validateForm = (): boolean => {
   if (!email.value || !password.value) {
-    notificationOpen('Пожалуйста, заполните все поля.')
+    openNotification('Пожалуйста, заполните все поля.')
     return false
   }
   return true
@@ -61,9 +51,9 @@ const submitForm = async (): Promise<void> => {
       await createUserWithEmailAndPassword(auth, email.value, password.value)
     }
     router.push('/')
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      notificationOpen(err.message)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      openNotification(error.message)
     }
   } finally {
     isLoading.value = false
@@ -75,7 +65,7 @@ const submitForm = async (): Promise<void> => {
   <transition>
     <AppNotificationError
       v-if="isNotificationOpen"
-      :msg="errMsg"
+      :msg="errorMessage"
       class="absolute bottom-10 right-10"
     />
   </transition>
@@ -125,14 +115,4 @@ const submitForm = async (): Promise<void> => {
   </main>
 </template>
 
-<style>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 1s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>
+<style></style>
