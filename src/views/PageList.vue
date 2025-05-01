@@ -48,6 +48,16 @@ const deleteInterview = async (id: string): Promise<void> => {
   modalClose()
 }
 
+// const resultOffer = (value: string) => {
+//   if (value === 'reject') {
+//     resultOfferText.value = 'Отказ'
+//     isResultOffer.value = false
+//   } else {
+//     resultOfferText.value = 'Оффер'
+//     isResultOffer.value = true
+//   }
+// }
+
 onMounted(async () => {
   const listInterviews: Array<IInterview> = await getAllinterviews()
   interviews.value = [...listInterviews]
@@ -71,11 +81,14 @@ onMounted(async () => {
     <table class="shadow-md w-full">
       <thead class="bg-gray-100">
         <tr class="text-left">
-          <th class="w-2/12">Компания</th>
-          <th class="w-2/12">Имя HR</th>
-          <th class="w-5/12">Вакансия</th>
-          <th class="w-1/12">Контакты</th>
-          <th class="w-2/12"></th>
+          <th>Компания</th>
+          <th>Имя HR</th>
+          <th>Вакансия</th>
+          <th>Контакты</th>
+          <th>Пройденные этапы</th>
+          <th>Зарплатная вилка</th>
+          <th>Результат</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -83,9 +96,9 @@ onMounted(async () => {
           <td>{{ item.company }}</td>
           <td>{{ item.hrName }}</td>
           <td>
-            <a class="text-[#9c69c8]" :href="item.vacancyLink" target="_blank">{{
-              item.vacancyLink
-            }}</a>
+            <a class="text-[#9c69c8]" :href="item.vacancyLink" target="_blank">
+              Ссылка на вакансию
+            </a>
           </td>
           <td class="flex gap-6">
             <a
@@ -107,12 +120,42 @@ onMounted(async () => {
               class="pi pi-phone text-[#371777] scale-135"
             ></a>
           </td>
+          <td v-if="item.stages?.length">
+            <div class="flex gap-1">
+              <div v-for="(stage, i) in item.stages" :key="i" class="relative">
+                <div
+                  class="bg-blue-400 text-white w-7 h-7 flex items-center justify-center rounded-full stage"
+                >
+                  {{ i + 1 }}
+                </div>
+                <!-- Modal -->
+                <div class="bg-gray-500 text-white absolute bottom-8 hidden modal p-1 rounded-md">
+                  {{ stage.name }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td v-else>Не заполнено</td>
+          <td v-if="item.salaryFrom">{{ item.salaryFrom }} - {{ item.salaryTo }}</td>
+          <td v-else>Не заполнено</td>
+          <td v-if="item.result">
+            <div
+              :class="{
+                'bg-red-600 offer': item.result === 'Отказ',
+                'bg-green-600 offer': item.result === 'Оффер',
+              }"
+            >
+              {{ item.result }}
+            </div>
+          </td>
+          <td v-else>Не заполнено</td>
+
           <td class="text-center">
             <router-link :to="`/interview/${item.id}`">
-              <button class="pi pi-pencil bg-blue-500 text-white p-2 rounded-md"></button>
+              <button class="pi pi-pencil bg-blue-500 text-white p-3 rounded-md"></button>
             </router-link>
             <button
-              class="pi pi-trash bg-red-600 text-white p-2 rounded-md ml-5"
+              class="pi pi-trash bg-red-600 text-white p-3 rounded-md ml-2"
               @click="modalOpen(item.id)"
             ></button>
           </td>
@@ -130,5 +173,13 @@ th {
 
 td {
   border-top: 1px solid #e6e6e6;
+}
+
+.p-tooltip-top {
+  box-flex-group: black;
+}
+
+.stage:hover + .modal {
+display: block;
 }
 </style>

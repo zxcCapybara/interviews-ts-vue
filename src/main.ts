@@ -1,12 +1,12 @@
 import './assets/main.css'
 import 'primeicons/primeicons.css'
 
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { initializeApp } from 'firebase/app'
 
 import PrimeVue from 'primevue/config'
-
 import InputNumber from 'primevue/inputnumber'
 
 
@@ -27,10 +27,8 @@ initializeApp(firebaseConfig)
 const app = createApp(App)
 
 app.use(createPinia())
-
 app.use(router)
-app.use(PrimeVue)
+app.use(PrimeVue) // Без theme и unstyled
 app.component('app-input', InputNumber)
-
 
 app.mount('#app')
