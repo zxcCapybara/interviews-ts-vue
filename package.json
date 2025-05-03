@@ -15,6 +15,7 @@
   "dependencies": {
     "@primeuix/themes": "^1.0.3",
     "@tailwindcss/vite": "^4.1.4",
+    "chart.js": "^4.4.9",
     "firebase": "^11.6.1",
     "pinia": "^3.0.1",
     "primeicons": "^7.0.0",

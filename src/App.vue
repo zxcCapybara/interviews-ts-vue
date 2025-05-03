@@ -19,12 +19,14 @@ onMounted(() => {
     isLoading.value = false
   })
 })
+
 </script>
 
 <template>
   <AppLoader v-if="isLoading" />
-  <main v-else class="w-[80%] mx-auto mt-5">
+  <main v-else class="w-[90%] mx-auto mt-5">
     <AppHeader />
     <RouterView />
   </main>
 </template>
+

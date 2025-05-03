@@ -11,6 +11,7 @@ import {
   getFirestore,
   orderBy,
   query,
+  where,
 } from 'firebase/firestore'
 import { onMounted, ref } from 'vue'
 
@@ -21,16 +22,36 @@ const interviewId = ref<string>('')
 const isLoading = ref<boolean>(true)
 
 const interviews = ref<IInterview[]>([])
+const selectedFilterResult = ref<string>('')
 
-const getAllinterviews = async <T extends IInterview>(): Promise<T[]> => {
-  const getData = query(
-    collection(db, `users/${userStore.userId}/interviews`),
-    orderBy('createdAt', 'desc'),
-  )
+const getAllinterviews = async <T extends IInterview>(isFilter?: boolean): Promise<T[]> => {
+  let getData
+
+  if (isFilter) {
+    getData = query(
+      collection(db, `users/${userStore.userId}/interviews`),
+      orderBy('createdAt', 'desc'),
+      where('result', '==', selectedFilterResult.value),
+    )
+  } else {
+    getData = query(
+      collection(db, `users/${userStore.userId}/interviews`),
+      orderBy('createdAt', 'desc'),
+    )
+  }
 
   const listDocs = await getDocs(getData)
 
   return listDocs.docs.map((doc) => doc.data() as T)
+}
+
+const fetchAndSetInterviews = async (isFilter: boolean = false): Promise<void> => {
+  isLoading.value = true
+
+  const listInterviews: Array<IInterview> = await getAllinterviews(isFilter)
+  interviews.value = listInterviews
+
+  isLoading.value = false
 }
 
 const modalOpen = (id: string) => {
@@ -48,20 +69,18 @@ const deleteInterview = async (id: string): Promise<void> => {
   modalClose()
 }
 
-// const resultOffer = (value: string) => {
-//   if (value === 'reject') {
-//     resultOfferText.value = 'Отказ'
-//     isResultOffer.value = false
-//   } else {
-//     resultOfferText.value = 'Оффер'
-//     isResultOffer.value = true
-//   }
-// }
+const submitFilter = async (): Promise<void> => {
+  fetchAndSetInterviews(true)
+}
+
+const clearFilter = async (): Promise<void> => {
+  fetchAndSetInterviews()
+
+  selectedFilterResult.value = ''
+}
 
 onMounted(async () => {
-  const listInterviews: Array<IInterview> = await getAllinterviews()
-  interviews.value = [...listInterviews]
-  isLoading.value = false
+  fetchAndSetInterviews()
 })
 </script>
 
@@ -78,6 +97,48 @@ onMounted(async () => {
   </div>
   <main v-else>
     <h1 class="font-bold text-3xl mb-3 mt-10">Список собеседований</h1>
+    <div class="my-6">
+      <div class="flex gap-5">
+        <label class="flex items-center gap-2 cursor-pointer group">
+          <input
+            id="radio1"
+            type="radio"
+            name="status"
+            value="Отказ"
+            class="checked:border-red-600 checked:bg-red-600 radio"
+            v-model="selectedFilterResult"
+          />
+          <span class="text-gray-600 group-hover:text-red-600 transition-colors">Отказ</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer group">
+          <input
+            id="radio2"
+            type="radio"
+            name="status"
+            value="Оффер"
+            class="checked:border-green-600 checked:bg-green-600 radio"
+            v-model="selectedFilterResult"
+          />
+          <span class="text-gray-600 group-hover:text-green-600 transition-colors">Оффер</span>
+        </label>
+        <button
+          class="bg-[#00aa36] text-white rounded-xl p-2"
+          @click="submitFilter"
+          :disabled="!selectedFilterResult"
+          :class="{ 'opacity-50 cursor': !selectedFilterResult }"
+        >
+          Сохранить
+        </button>
+        <button
+          class="bg-[#c4072d] text-white rounded-xl p-2"
+          :disabled="!selectedFilterResult"
+          :class="{ 'opacity-50 cursor': !selectedFilterResult }"
+          @click="clearFilter"
+        >
+          Сбросить
+        </button>
+      </div>
+    </div>
     <table class="shadow-md w-full">
       <thead class="bg-gray-100">
         <tr class="text-left">
@@ -100,26 +161,31 @@ onMounted(async () => {
               Ссылка на вакансию
             </a>
           </td>
-          <td class="flex gap-6">
+          <td v-if="item.contactPhone || item.contactTelegram || item.contactWhatsApp" class="flex gap-6 contacts">
             <a
               v-if="item.contactTelegram"
               :href="`https://t.me/${item.contactTelegram}`"
               target="_blank"
               class="pi pi-telegram text-[#0088cc] scale-145"
-            ></a>
+            >
+              <span class="mini-modal">{{ item.contactTelegram }}</span>
+            </a>
             <a
               v-if="item.contactWhatsApp"
               :href="`https://wa.me/${item.contactWhatsApp}`"
               target="_blank"
               class="pi pi-whatsapp text-[#25d366] scale-135"
-            ></a>
+              ><span class="mini-modal">{{ item.contactWhatsApp }}</span></a
+            >
             <a
               v-if="item.contactPhone"
               :href="`tel:${item.contactPhone}`"
               target="_blank"
               class="pi pi-phone text-[#371777] scale-135"
-            ></a>
+              ><span class="mini-modal">{{ item.contactPhone }}</span></a
+            >
           </td>
+          <td v-else>Не заполнено</td>
           <td v-if="item.stages?.length">
             <div class="flex gap-1">
               <div v-for="(stage, i) in item.stages" :key="i" class="relative">
@@ -129,7 +195,7 @@ onMounted(async () => {
                   {{ i + 1 }}
                 </div>
                 <!-- Modal -->
-                <div class="bg-gray-500 text-white absolute bottom-8 hidden modal p-1 rounded-md">
+                <div class="mini-modal">
                   {{ stage.name }}
                 </div>
               </div>
@@ -179,7 +245,16 @@ td {
   box-flex-group: black;
 }
 
-.stage:hover + .modal {
-display: block;
+.stage:hover + .mini-modal {
+  display: block;
+  bottom: 35px;
+}
+
+.contacts > a:hover > span {
+  display: block;
+}
+
+.cursor {
+  cursor: not-allowed;
 }
 </style>

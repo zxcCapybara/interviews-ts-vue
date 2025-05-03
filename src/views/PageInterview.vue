@@ -79,6 +79,7 @@ onMounted(async () => await getData())
       class="inputInterview mb-5"
       v-model="interview.contactWhatsApp"
     />
+    
 
     <label for="phone1">Телефон HR</label>
     <input id="phone1" type="text" class="inputInterview mb-5" v-model="interview.contactPhone" />

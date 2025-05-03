@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+
+
 button {
   cursor: pointer;
 }
@@ -22,4 +24,8 @@ h1 {
 
 .offer {
   @apply rounded-xl text-white py-2 w-20 flex items-center justify-center 
+}
+
+.mini-modal {
+  @apply hidden absolute bg-gray-500 p-1 rounded-md text-white bottom-5
 }

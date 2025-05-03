@@ -94,7 +94,7 @@ const addNewInterview = async (): Promise<void> => {
         v-model="contactTelegram"
         class="inputInterview"
         type="text"
-        placeholder="Telegram username HR"
+        placeholder="Telegram username HR (пример: sigmaSasha228)"
       />
       <input
         v-model="contactWhatsApp"
@@ -112,9 +112,11 @@ const addNewInterview = async (): Promise<void> => {
       />
 
       <button
+        
         @click="addNewInterview"
         :loading="loading"
         class="bg-blue-400 p-4 rounded-xl text-white hover:bg-blue-500"
+        
       >
         <span>Создать собеседование</span>
       </button>
