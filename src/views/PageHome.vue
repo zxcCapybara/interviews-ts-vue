@@ -65,12 +65,12 @@ const addNewInterview = async (): Promise<void> => {
     <AppNotificationError
       v-if="isNotificationOpen"
       :msg="errorMessage"
-      class="absolute bottom-10 right-10"
+      class="absolute bottom-10 right-1/2 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-fit"
     />
   </transition>
   <AppLoader v-if="loading" />
   <main v-else class="mt-20">
-    <div class="flex flex-col gap-5 shadow-xl rounded-xl w-[50rem] mx-auto py-5 px-2">
+    <div class="flex flex-col gap-5 shadow-xl rounded-xl sm:w-[50rem] mx-auto py-5 px-2">
       <h1 class="text-center text-xl font-bold">Новое собеседование</h1>
 
       <div class="relative">
@@ -112,11 +112,9 @@ const addNewInterview = async (): Promise<void> => {
       />
 
       <button
-        
         @click="addNewInterview"
         :loading="loading"
         class="bg-blue-400 p-4 rounded-xl text-white hover:bg-blue-500"
-        
       >
         <span>Создать собеседование</span>
       </button>

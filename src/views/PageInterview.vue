@@ -56,7 +56,7 @@ onMounted(async () => await getData())
 <template>
   <AppLoader v-if="isLoading" />
 
-  <main v-else-if="interview?.id && !isLoading" class="shadow-md p-5 w-[50rem] my-10 mx-auto">
+  <main v-else-if="interview?.id && !isLoading" class="shadow-md p-5 sm:w-[50rem] my-20 sm:py-10 mx-auto">
     
     <h1 class="mb-5">Собеседование в компанию {{ interview.company }}</h1>
 
@@ -86,7 +86,7 @@ onMounted(async () => await getData())
 
     <div class="flex gap-5">
       <div class="w-full">
-        <label for="zp">Зарплатная вилка от</label>
+        <label for="zp">Зп вилка от</label>
         <app-input
           id="zp"
           inputId="integeronly"
@@ -96,7 +96,7 @@ onMounted(async () => await getData())
         />
       </div>
       <div class="w-full">
-        <label for="zp2">Зарплатная вилка до</label>
+        <label for="zp2">Зп вилка до</label>
         <app-input
           id="z2"
           inputId="integeronly"

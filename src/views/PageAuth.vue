@@ -66,12 +66,12 @@ const submitForm = async (): Promise<void> => {
     <AppNotificationError
       v-if="isNotificationOpen"
       :msg="errorMessage"
-      class="absolute bottom-10 right-10"
+      class="absolute bottom-60 sm:bottom-10 sm:right-10 w-[90%] sm:w-fit"
     />
   </transition>
   <main class="mt-20">
     <div
-      class="flex flex-col mx-auto items-center border-1 border-gray-100 rounded-xl w-[30rem] shadow-lg"
+      class="flex flex-col  mx-auto items-center border-1 border-gray-100 rounded-xl sm:w-[30rem] shadow-lg"
     >
       <div class="flex flex-col items-center pb-6">
         <p class="my-5 text-xl font-bold">Приветствую!</p>

@@ -8,9 +8,9 @@ defineProps<Props>()
 
 <template>
   <div
-    class="box bg-[#ff798d] text-red-900 w-[24rem] min-h-[8rem] rounded-xl flex flex-col justify-center p-2 border-l-5 border-red-800 text-xl"
+    class="box bg-[#ff798d] text-red-900 w-[15rem] sm:w-[24rem] min-h-[6rem] sm:min-h-[8rem] rounded-xl flex flex-col justify-center p-2 border-l-5 border-red-800 text-xl"
   >
-    <span class="font-bold">Error</span>
+    <span class="font-bold text-md sm:text-xl">Error</span>
     <span>{{ msg }}</span>
   </div>
 </template>

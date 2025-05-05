@@ -1,5 +1,5 @@
 <template>
-  <h1>Статистика</h1>
+  <h1 class="my-10">Статистика</h1>
   <div class="card flex justify-center">
     <app-chart
       type="doughnut"
@@ -31,7 +31,7 @@ onMounted(async () => {
 })
 
 const getAllinterviews = async <T extends IInterview>(): Promise<T[]> => {
-  let getData = query(
+  const getData = query(
     collection(db, `users/${userStore.userId}/interviews`),
     orderBy('createdAt', 'desc'),
   )
