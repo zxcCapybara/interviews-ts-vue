@@ -1,6 +1,11 @@
 # .
 
-This template should help get you started developing with Vue 3 in Vite.
+Список собеседований. Vue 3 + ts + pinia + firebase
+
+Можно создавать собеседования, редактировать, дополнять, удалять, смотреть статистикву.
+Присутствует регистариция + вход.
+Адаптировано под мобильные устройства.
+
 
 ## Recommended IDE Setup
 
